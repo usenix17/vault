@@ -58,8 +58,13 @@ resource "vault_policy" "admin" {
   EOT
 }
 
+data "vault_identity_entity" "sasha" {
+  alias_name             = "sasha"
+  alias_mount_accessor   = "auth_oidc_e4166ac3"
+}
+
 resource "vault_identity_entity_policies" "sasha" {
-  entity_id = "entity_1f721030"
+  entity_id = data.vault_identity_entity.sasha.id
   policies  = [vault_policy.admin.name]
   exclusive = false
 }
