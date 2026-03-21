@@ -25,10 +25,8 @@ terraform {
 }
 
 provider "vault" {
-  address = "https://vault.starnix.net"
-
-  # The admin-policy token cannot create child tokens, so skip that step.
-  # Authenticate by setting VAULT_TOKEN in the environment:
-  #   export VAULT_TOKEN=$(vault login -method=oidc -token-only 2>/dev/null)
+  # Address is read from VAULT_ADDR environment variable.
+  # Locally: export VAULT_ADDR=https://vault.starnix.net
+  # CI:      VAULT_ADDR=http://127.0.0.1:8200 (set in workflow)
   skip_child_token = true
 }
