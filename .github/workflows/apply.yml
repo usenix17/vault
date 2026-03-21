@@ -23,13 +23,12 @@ jobs:
 
       - name: Terraform Apply
         working-directory: repo
-        run: terraform apply -auto-approve -var="token_reviewer_jwt=$TOKEN_REVIEWER_JWT"
+        run: terraform apply -auto-approve
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
           VAULT_ADDR: http://127.0.0.1:8200
-          TOKEN_REVIEWER_JWT: ${{ secrets.TOKEN_REVIEWER_JWT }}
 
       - name: Cleanup
         if: always()
