@@ -5,9 +5,10 @@ resource "vault_auth_backend" "kubernetes" {
 }
 
 resource "vault_kubernetes_auth_backend_config" "talos" {
-  backend            = vault_auth_backend.kubernetes.path
-  kubernetes_host    = "https://starnix.kubernetes.na-west-1.omni.siderolabs.io"
-  kubernetes_ca_cert = <<-EOT
+  backend               = vault_auth_backend.kubernetes.path
+  kubernetes_host       = "https://starnix.kubernetes.na-west-1.omni.siderolabs.io"
+  token_reviewer_jwt    = var.token_reviewer_jwt
+  kubernetes_ca_cert    = <<-EOT
     -----BEGIN CERTIFICATE-----
     MIIBijCCATCgAwIBAgIRALtEUjPzPrcB8E+k5ab7/Z8wCgYIKoZIzj0EAwIwFTET
     MBEGA1UEChMKa3ViZXJuZXRlczAeFw0yNTEyMjYyMzMwNTBaFw0zNTEyMjQyMzMw
