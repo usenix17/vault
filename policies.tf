@@ -58,6 +58,12 @@ resource "vault_policy" "admin" {
   EOT
 }
 
+resource "vault_identity_entity_policies" "sasha" {
+  entity_id = "entity_1f721030"
+  policies  = [vault_policy.admin.name]
+  exclusive = false
+}
+
 resource "vault_policy" "ssh_root_role" {
   name = "ssh-root-role"
 
