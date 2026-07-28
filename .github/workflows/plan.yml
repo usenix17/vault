@@ -33,6 +33,9 @@ jobs:
       - name: Terraform Validate
         working-directory: repo
         run: terraform validate
+        env:
+          # validate only needs the provider address to satisfy schema; no API call, no token
+          VAULT_ADDR: http://127.0.0.1:8200
 
       - name: Terraform Plan
         id: plan
