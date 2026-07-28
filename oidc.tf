@@ -1,15 +1,28 @@
 # OIDC auth method for interactive human login via Authentik (auth.starnix.net).
+# Backend accessor auth_oidc_e4166ac3 (referenced in policies.tf, groups.tf, ssh.tf).
 #
-# The mount itself (auth/oidc) and its config -- oidc_discovery_url, client id,
-# and especially oidc_client_secret -- are managed outside Terraform. Vault never
-# returns the client secret on read, so importing the backend config here would
-# force us to keep a copy of the secret in state/config just to avoid drift. The
-# role below is where the token TTL lives, so managing only the role is enough to
-# control how long a login token is valid.
-#
-# Backend accessor auth_oidc_e4166ac3 (referenced in policies.tf).
+# oidc_client_secret is supplied via var.oidc_client_secret because Vault never
+# returns it on read. On import the provider sees an empty secret, so the first
+# apply rewrites it to the real value (identical to live -- no login disruption).
+# Without the variable, a future apply would blank the secret and break login.
+resource "vault_jwt_auth_backend" "oidc" {
+  path = "oidc"
+  type = "oidc"
+
+  oidc_discovery_url = "https://auth.starnix.net/application/o/vault/"
+  oidc_client_id     = "aaF8zMmwvD9BGkHitLboavRg14SG4mTq4FgwIa2G"
+  oidc_client_secret = var.oidc_client_secret
+  default_role       = "authentik-admin"
+}
+
+# Adopt the existing live mount instead of creating a duplicate.
+import {
+  to = vault_jwt_auth_backend.oidc
+  id = "oidc"
+}
+
 resource "vault_jwt_auth_backend_role" "authentik_admin" {
-  backend   = "oidc"
+  backend   = vault_jwt_auth_backend.oidc.path
   role_name = "authentik-admin"
   role_type = "oidc"
 
