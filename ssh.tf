@@ -9,9 +9,21 @@
 # admin-policy grants sign/default-user; the ssh-root-role policy (attached via
 # the breakglass OIDC group) grants sign/root-role.
 
+# The mount itself. The CA key material (config/ca) stays out of Terraform: the
+# private key was generated inside Vault and cannot be exported.
+resource "vault_mount" "ssh_client_signer" {
+  path = "ssh-client-signer"
+  type = "ssh"
+}
+
+import {
+  to = vault_mount.ssh_client_signer
+  id = "ssh-client-signer"
+}
+
 # Break-glass: sign a cert with principal "root". 1h TTL, no auto-renew.
 resource "vault_ssh_secret_backend_role" "root_role" {
-  backend  = "ssh-client-signer"
+  backend  = vault_mount.ssh_client_signer.path
   name     = "root-role"
   key_type = "ca"
 
@@ -26,7 +38,7 @@ resource "vault_ssh_secret_backend_role" "root_role" {
 # Everyday login: users may only sign a cert for their own username, pinned to
 # the OIDC alias name via templating (mount accessor auth_oidc_e4166ac3).
 resource "vault_ssh_secret_backend_role" "default_user" {
-  backend  = "ssh-client-signer"
+  backend  = vault_mount.ssh_client_signer.path
   name     = "default-user"
   key_type = "ca"
 

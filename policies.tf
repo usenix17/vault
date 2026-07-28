@@ -84,3 +84,18 @@ resource "vault_policy" "ssh_root_role" {
     }
   EOT
 }
+
+# Control Group helper policy (response-wrapping unwrap + control-group cubbyhole).
+resource "vault_policy" "control_group" {
+  name = "control-group"
+
+  policy = <<-EOT
+    path "cubbyhole/control-group" {
+        capabilities = ["update", "create", "read"]
+    }
+
+    path "sys/wrapping/unwrap" {
+        capabilities = ["update"]
+    }
+  EOT
+}
