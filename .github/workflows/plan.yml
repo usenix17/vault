@@ -5,6 +5,12 @@ on:
     branches:
       - master
 
+# GITHUB_TOKEN defaults to read-only; pull-requests:write is needed so the
+# "Post Plan to PR" step can create a comment via the issues-comments API.
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   plan:
     runs-on: self-hosted
