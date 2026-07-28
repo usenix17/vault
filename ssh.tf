@@ -20,7 +20,7 @@ resource "vault_ssh_secret_backend_role" "root_role" {
   default_extensions      = { "permit-pty" = "" }
 
   ttl                 = "3600"
-  not_before_duration = "30s"
+  not_before_duration = "30"
 }
 
 # Everyday login: users may only sign a cert for their own username, pinned to
@@ -38,5 +38,5 @@ resource "vault_ssh_secret_backend_role" "default_user" {
     "permit-user-rc" = ""
   }
 
-  not_before_duration = "30s"
+  not_before_duration = "30"
 }
