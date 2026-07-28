@@ -59,8 +59,8 @@ resource "vault_policy" "admin" {
 }
 
 data "vault_identity_entity" "sasha" {
-  alias_name             = "sasha"
-  alias_mount_accessor   = "auth_oidc_e4166ac3"
+  alias_name           = "sasha"
+  alias_mount_accessor = "auth_oidc_e4166ac3"
 }
 
 resource "vault_identity_entity_policies" "sasha" {
