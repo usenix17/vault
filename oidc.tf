@@ -15,12 +15,6 @@ resource "vault_jwt_auth_backend" "oidc" {
   default_role       = "authentik-admin"
 }
 
-# Adopt the existing live mount instead of creating a duplicate.
-import {
-  to = vault_jwt_auth_backend.oidc
-  id = "oidc"
-}
-
 resource "vault_jwt_auth_backend_role" "authentik_admin" {
   backend   = vault_jwt_auth_backend.oidc.path
   role_name = "authentik-admin"

@@ -33,22 +33,3 @@ resource "vault_identity_group_alias" "authentik_admins" {
   mount_accessor = "auth_oidc_e4166ac3"
   canonical_id   = vault_identity_group.authentik_admins.id
 }
-
-# Adopt the resources that already exist live (Terraform 1.5+ import blocks), so
-# the merge-apply imports them instead of trying to create duplicates. The
-# authentik-admins alias has no import block: it does not exist yet, so apply
-# creates it. These blocks are safe to remove in a later cleanup once imported.
-import {
-  to = vault_identity_group.breakglass
-  id = "473048b6-6272-417b-40ae-197523b3d269"
-}
-
-import {
-  to = vault_identity_group_alias.breakglass
-  id = "07e7ac10-37a0-4a56-9201-46e603f6d074"
-}
-
-import {
-  to = vault_identity_group.authentik_admins
-  id = "cd9d94a8-a0f8-9ae6-6dd3-b3f3cf1dec22"
-}
