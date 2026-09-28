@@ -48,6 +48,9 @@ resource "vault_ssh_secret_backend_role" "default_user" {
   default_extensions = {
     "permit-pty"     = ""
     "permit-user-rc" = ""
+    # permit-port-forwarding lets these certs be used as an SSH jump host
+    # (ProxyJump / ssh -J / -W), e.g. reaching a bhyve VM on a host-only bridge.
+    "permit-port-forwarding" = ""
   }
 
   not_before_duration = "30"
